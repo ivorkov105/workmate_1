@@ -3,57 +3,48 @@ package test_tasks.workmate_test_task.data.datasources.local.dao
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import test_tasks.workmate_test_task.data.datasources.local.entities.*
-import test_tasks.workmate_test_task.data.datasources.local.entities.realations.CharacterFilmCrossRef
-import test_tasks.workmate_test_task.data.datasources.local.entities.realations.CharacterSpeciesCrossRef
-import test_tasks.workmate_test_task.data.datasources.local.entities.realations.CharacterStarshipCrossRef
-import test_tasks.workmate_test_task.data.datasources.local.entities.realations.CharacterVehicleCrossRef
-import test_tasks.workmate_test_task.data.datasources.local.entities.realations.CharacterWithDetails
-import test_tasks.workmate_test_task.data.datasources.local.entities.realations.FilmPlanetCrossRef
-import test_tasks.workmate_test_task.data.datasources.local.entities.realations.FilmSpeciesCrossRef
-import test_tasks.workmate_test_task.data.datasources.local.entities.realations.FilmStarshipCrossRef
-import test_tasks.workmate_test_task.data.datasources.local.entities.realations.FilmVehicleCrossRef
-import test_tasks.workmate_test_task.data.datasources.local.entities.realations.FilmWithDetails
+import test_tasks.workmate_test_task.data.datasources.local.entities.realations.*
 
 @Dao
 interface StarWarsDao {
 
-    //персонажи
+    // --- Characters ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacters(characters: List<CharacterEntity>)
 
     @Query("SELECT * FROM characters")
-    fun getAllCharacters(): Flow<List<CharacterEntity>>
+    fun getAllCharactersWithDetails(): Flow<List<CharacterWithDetails>>
 
     @Query("SELECT * FROM characters WHERE id = :id")
     suspend fun getCharacterById(id: Int): CharacterEntity?
 
-    //фильмы
+    // --- Films ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFilms(films: List<FilmEntity>)
 
     @Query("SELECT * FROM films")
-    fun getAllFilms(): Flow<List<FilmEntity>>
+    fun getAllFilmsWithDetails(): Flow<List<FilmWithDetails>>
 
-    //планеты
+    // --- Planets ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlanets(planets: List<PlanetEntity>)
 
     @Query("SELECT * FROM planets")
     fun getAllPlanets(): Flow<List<PlanetEntity>>
 
-    //виды
+    // --- Species ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSpecies(species: List<SpeciesEntity>)
 
-    //транспорт
+    // --- Vehicles ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVehicles(vehicles: List<VehicleEntity>)
 
-    //косм корабли
+    // --- Starships ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStarships(starships: List<StarshipEntity>)
 
-
+    // --- CrossRef Inserts ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacterFilmCrossRefs(crossRefs: List<CharacterFilmCrossRef>)
 
@@ -78,6 +69,7 @@ interface StarWarsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFilmStarshipCrossRefs(crossRefs: List<FilmStarshipCrossRef>)
 
+    // --- Complex Queries using Transactions ---
     
     @Transaction
     @Query("SELECT * FROM characters WHERE id = :id")

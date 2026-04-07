@@ -1,13 +1,15 @@
 package test_tasks.workmate_test_task.data.mappers
 
 import test_tasks.workmate_test_task.data.datasources.local.entities.*
+import test_tasks.workmate_test_task.data.datasources.local.entities.realations.*
 import test_tasks.workmate_test_task.data.datasources.remote.models.*
+import test_tasks.workmate_test_task.domain.model.*
 
 fun String.toId(): Int {
     return this.split("/").filter { it.isNotEmpty() }.last().toInt()
 }
 
-// --- Entity Mappers ---
+// --- DTO to Entity ---
 
 fun CharacterDto.toEntity(): CharacterEntity = CharacterEntity(
     id = url.toId(),
@@ -106,6 +108,110 @@ fun StarshipDto.toEntity(): StarshipEntity = StarshipEntity(
     starshipClass = starshipClass,
     created = created,
     edited = edited,
+    url = url
+)
+
+// --- Entity to Domain ---
+
+fun CharacterEntity.toDomain(): Character = Character(
+    id = id,
+    name = name,
+    height = height,
+    mass = mass,
+    hairColor = hairColor,
+    skinColor = skinColor,
+    eyeColor = eyeColor,
+    birthYear = birthYear,
+    gender = gender,
+    homeworld = null, 
+    films = emptyList(),
+    species = emptyList(),
+    vehicles = emptyList(),
+    starships = emptyList(),
+    url = url
+)
+
+fun CharacterWithDetails.toDomain(): Character = character.toDomain().copy(
+    homeworld = homeworld?.toDomain(),
+    films = films.map { it.toDomain() },
+    species = species.map { it.toDomain() },
+    vehicles = vehicles.map { it.toDomain() },
+    starships = starships.map { it.toDomain() }
+)
+
+fun FilmEntity.toDomain(): Film = Film(
+    id = id,
+    title = title,
+    episodeId = episodeId,
+    openingCrawl = openingCrawl,
+    director = director,
+    producer = producer,
+    releaseDate = releaseDate,
+    url = url
+)
+
+fun FilmWithDetails.toDomain(): Film = film.toDomain() 
+
+fun PlanetEntity.toDomain(): Planet = Planet(
+    id = id,
+    name = name,
+    rotationPeriod = rotationPeriod,
+    orbitalPeriod = orbitalPeriod,
+    diameter = diameter,
+    climate = climate,
+    gravity = gravity,
+    terrain = terrain,
+    surfaceWater = surfaceWater,
+    population = population,
+    url = url
+)
+
+fun SpeciesEntity.toDomain(): Species = Species(
+    id = id,
+    name = name,
+    classification = classification,
+    designation = designation,
+    averageHeight = averageHeight,
+    skinColors = skinColors,
+    hairColors = hairColors,
+    eyeColors = eyeColors,
+    averageLifespan = averageLifespan,
+    homeworld = null,
+    language = language,
+    url = url
+)
+
+fun VehicleEntity.toDomain(): Vehicle = Vehicle(
+    id = id,
+    name = name,
+    model = model,
+    manufacturer = manufacturer,
+    costInCredits = costInCredits,
+    length = length,
+    maxAtmospheringSpeed = maxAtmospheringSpeed,
+    crew = crew,
+    passengers = passengers,
+    cargoCapacity = cargoCapacity,
+    consumables = consumables,
+    vehicleClass = vehicleClass,
+    url = url
+)
+
+fun StarshipEntity.toDomain(): Starship = Starship(
+    id = id,
+    name = name,
+    model = model,
+    manufacturer = manufacturer,
+    costInCredits = costInCredits,
+    length = length,
+    maxAtmospheringSpeed = maxAtmospheringSpeed,
+    crew = crew,
+    passengers = passengers,
+    cargoCapacity = cargoCapacity,
+    consumables = consumables,
+    hyperdriveRating = hyperdriveRating,
+    MGLT = MGLT,
+    starshipClass = starshipClass,
     url = url
 )
 
