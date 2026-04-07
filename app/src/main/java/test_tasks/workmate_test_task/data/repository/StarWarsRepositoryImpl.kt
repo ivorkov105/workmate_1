@@ -16,9 +16,12 @@ class StarWarsRepositoryImpl @Inject constructor(
 ) : StarWarsRepository {
 
     override fun getCharacters(search: String?): Flow<List<Character>> {
-        return starWarsDao.getAllCharactersWithDetails().map { list ->
-            list.map { it.toDomain() }
+        val flow = if (search.isNullOrBlank()) {
+            starWarsDao.getAllCharactersWithDetails()
+        } else {
+            starWarsDao.searchCharactersWithDetails(search)
         }
+        return flow.map { list -> list.map { it.toDomain() } }
     }
 
     override suspend fun syncCharacters(page: Int): Result<Unit> {

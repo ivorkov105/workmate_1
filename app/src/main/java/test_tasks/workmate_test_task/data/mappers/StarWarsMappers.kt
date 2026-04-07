@@ -9,8 +9,6 @@ fun String.toId(): Int {
     return this.split("/").filter { it.isNotEmpty() }.last().toInt()
 }
 
-// --- DTO to Entity ---
-
 fun CharacterDto.toEntity(): CharacterEntity = CharacterEntity(
     id = url.toId(),
     name = name,
@@ -110,8 +108,6 @@ fun StarshipDto.toEntity(): StarshipEntity = StarshipEntity(
     edited = edited,
     url = url
 )
-
-// --- Entity to Domain ---
 
 fun CharacterEntity.toDomain(): Character = Character(
     id = id,
@@ -214,8 +210,6 @@ fun StarshipEntity.toDomain(): Starship = Starship(
     starshipClass = starshipClass,
     url = url
 )
-
-// --- CrossRef Mappers ---
 
 fun CharacterDto.toFilmCrossRefs(): List<CharacterFilmCrossRef> {
     val characterId = url.toId()

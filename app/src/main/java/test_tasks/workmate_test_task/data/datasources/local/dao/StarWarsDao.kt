@@ -8,9 +8,12 @@ import test_tasks.workmate_test_task.data.datasources.local.entities.realations.
 @Dao
 interface StarWarsDao {
 
-    // --- Characters ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacters(characters: List<CharacterEntity>)
+
+    @Transaction
+    @Query("SELECT * FROM characters WHERE name LIKE '%' || :query || '%' OR :query IS NULL")
+    fun searchCharactersWithDetails(query: String?): Flow<List<CharacterWithDetails>>
 
     @Query("SELECT * FROM characters")
     fun getAllCharactersWithDetails(): Flow<List<CharacterWithDetails>>
@@ -18,33 +21,28 @@ interface StarWarsDao {
     @Query("SELECT * FROM characters WHERE id = :id")
     suspend fun getCharacterById(id: Int): CharacterEntity?
 
-    // --- Films ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFilms(films: List<FilmEntity>)
 
+    @Transaction
     @Query("SELECT * FROM films")
     fun getAllFilmsWithDetails(): Flow<List<FilmWithDetails>>
 
-    // --- Planets ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlanets(planets: List<PlanetEntity>)
 
     @Query("SELECT * FROM planets")
     fun getAllPlanets(): Flow<List<PlanetEntity>>
 
-    // --- Species ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSpecies(species: List<SpeciesEntity>)
 
-    // --- Vehicles ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVehicles(vehicles: List<VehicleEntity>)
 
-    // --- Starships ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStarships(starships: List<StarshipEntity>)
 
-    // --- CrossRef Inserts ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacterFilmCrossRefs(crossRefs: List<CharacterFilmCrossRef>)
 
@@ -69,8 +67,6 @@ interface StarWarsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFilmStarshipCrossRefs(crossRefs: List<FilmStarshipCrossRef>)
 
-    // --- Complex Queries using Transactions ---
-    
     @Transaction
     @Query("SELECT * FROM characters WHERE id = :id")
     fun getCharacterWithDetails(id: Int): Flow<CharacterWithDetails?>
