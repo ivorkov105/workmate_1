@@ -38,7 +38,7 @@ class StarWarsRepositoryImpl @Inject constructor(
                 starWarsDao.insertCharacterVehicleCrossRefs(dto.toVehicleCrossRefs())
                 starWarsDao.insertCharacterStarshipCrossRefs(dto.toStarshipCrossRefs())
             }
-            
+
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -55,7 +55,7 @@ class StarWarsRepositoryImpl @Inject constructor(
         return try {
             val response = apiService.getFilms()
             val dtos = response.results
-            
+
             val entities = dtos.map { it.toEntity() }
             starWarsDao.insertFilms(entities)
             
@@ -65,7 +65,7 @@ class StarWarsRepositoryImpl @Inject constructor(
                 starWarsDao.insertFilmVehicleCrossRefs(dto.toVehicleCrossRefs())
                 starWarsDao.insertFilmStarshipCrossRefs(dto.toStarshipCrossRefs())
             }
-            
+
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

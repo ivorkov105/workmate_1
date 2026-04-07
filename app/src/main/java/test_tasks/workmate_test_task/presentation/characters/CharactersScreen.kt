@@ -21,7 +21,7 @@ import test_tasks.workmate_test_task.domain.model.Character
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CharactersScreen(
+fun  CharactersScreen(
     viewModel: CharactersViewModel,
     onNavigateToDetail: (Int) -> Unit
 ) {

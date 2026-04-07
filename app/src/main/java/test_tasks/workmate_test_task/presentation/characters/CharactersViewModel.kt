@@ -23,6 +23,7 @@ class CharactersViewModel @Inject constructor(
 
     private val _isSyncing = MutableStateFlow(false)
 
+    @OptIn(FlowPreview::class)
     val uiState: StateFlow<CharactersUiState> = _searchQuery
         .debounce(300)
         .flatMapLatest { query ->
