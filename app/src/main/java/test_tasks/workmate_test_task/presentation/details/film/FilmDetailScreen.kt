@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import test_tasks.workmate_test_task.R
 import test_tasks.workmate_test_task.domain.model.Film
+import test_tasks.workmate_test_task.ui.components.ClickableCharacterCard
 import test_tasks.workmate_test_task.ui.components.InfoCard
 import test_tasks.workmate_test_task.ui.components.SectionTitle
 
@@ -25,7 +26,8 @@ import test_tasks.workmate_test_task.ui.components.SectionTitle
 @Composable
 fun FilmDetailScreen(
     viewModel: FilmDetailViewModel,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onCharacterClick: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -55,7 +57,11 @@ fun FilmDetailScreen(
                 }
             }
             is FilmDetailUiState.Success -> {
-                FilmDetailContent(state.film, Modifier.padding(padding))
+                FilmDetailContent(
+                    film = state.film,
+                    onCharacterClick = onCharacterClick,
+                    modifier = Modifier.padding(padding)
+                )
             }
             is FilmDetailUiState.Error -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -67,7 +73,11 @@ fun FilmDetailScreen(
 }
 
 @Composable
-fun FilmDetailContent(film: Film, modifier: Modifier = Modifier) {
+fun FilmDetailContent(
+    film: Film,
+    onCharacterClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -100,14 +110,14 @@ fun FilmDetailContent(film: Film, modifier: Modifier = Modifier) {
         if (film.characters.isNotEmpty()) {
             item { SectionTitle("Characters") }
             items(film.characters) { character ->
-	            InfoCard("Character", character.name)
+                ClickableCharacterCard(character.name) { onCharacterClick(character.id) }
             }
         }
 
         if (film.planets.isNotEmpty()) {
             item { SectionTitle("Planets") }
             items(film.planets) { planet ->
-	            InfoCard("Planet", planet.name)
+                InfoCard("Planet", planet.name)
             }
         }
     }
@@ -131,5 +141,5 @@ fun FilmDetailContentPreview() {
         species = emptyList(),
         url = ""
     )
-    FilmDetailContent(film = mockFilm)
+    FilmDetailContent(film = mockFilm, onCharacterClick = {})
 }

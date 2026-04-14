@@ -61,7 +61,10 @@ fun StarWarsNav() {
             val viewModel: FilmDetailViewModel = hiltViewModel()
             FilmDetailScreen(
                 viewModel = viewModel,
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onCharacterClick = { characterId ->
+                    navController.navigate(Screen.CharacterDetail.createRoute(characterId))
+                }
             )
         }
     }

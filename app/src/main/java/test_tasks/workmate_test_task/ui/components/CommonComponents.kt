@@ -82,6 +82,35 @@ fun ClickableFilmCard(title: String, onClick: () -> Unit) {
 	}
 }
 
+@Composable
+fun ClickableCharacterCard(name: String, onClick: () -> Unit) {
+	Card(
+		modifier = Modifier
+			.fillMaxWidth()
+			.clickable(onClick = onClick),
+		shape = RoundedCornerShape(12.dp),
+		colors = CardDefaults.cardColors(containerColor = Color(0xFFE8EAF6))
+	) {
+		Row(
+			modifier = Modifier
+				.padding(16.dp)
+				.fillMaxWidth(),
+			horizontalArrangement = Arrangement.SpaceBetween,
+			verticalAlignment = Alignment.CenterVertically
+		) {
+			Text(text = name, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF3949AB))
+			Icon(
+				painter = painterResource(id = R.drawable.ic_arrow_open),
+				contentDescription = "Open",
+				tint = Color(0xFF3949AB),
+				modifier = Modifier
+					.size(20.dp)
+					.rotate(180f)
+			)
+		}
+	}
+}
+
 @Preview(showBackground = true)
 @Composable
 fun InfoCardPreview() {
@@ -98,4 +127,10 @@ fun EmptyInfoCardPreview() {
 @Composable
 fun ClickableFilmCardPreview() {
 	ClickableFilmCard("A New Hope") {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ClickableCharacterCardPreview() {
+	ClickableCharacterCard("Luke Skywalker") {}
 }

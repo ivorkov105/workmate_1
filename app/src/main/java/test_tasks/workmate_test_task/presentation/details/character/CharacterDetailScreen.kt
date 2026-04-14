@@ -29,6 +29,8 @@ import test_tasks.workmate_test_task.R
 import test_tasks.workmate_test_task.domain.model.Character
 import test_tasks.workmate_test_task.domain.model.Film
 import test_tasks.workmate_test_task.domain.model.Planet
+import test_tasks.workmate_test_task.domain.model.Starship
+import test_tasks.workmate_test_task.domain.model.Vehicle
 import test_tasks.workmate_test_task.ui.components.ClickableFilmCard
 import test_tasks.workmate_test_task.ui.components.EmptyInfoCard
 import test_tasks.workmate_test_task.ui.components.InfoCard
@@ -115,6 +117,24 @@ fun CharacterDetailContent(
 			}
 		}
 
+		item { SectionTitle("Vehicles") }
+		if (character.vehicles.isEmpty()) {
+			item { EmptyInfoCard("No vehicles available") }
+		} else {
+			items(character.vehicles) { vehicle ->
+				InfoCard(vehicle.name, vehicle.model)
+			}
+		}
+
+		item { SectionTitle("Starships") }
+		if (character.starships.isEmpty()) {
+			item { EmptyInfoCard("No starships available") }
+		} else {
+			items(character.starships) { starship ->
+				InfoCard(starship.name, starship.model)
+			}
+		}
+
 		item { SectionTitle("Films") }
 		if (character.films.isEmpty()) {
 			item { EmptyInfoCard("No films available") }
@@ -140,11 +160,23 @@ fun CharacterDetailContentPreview() {
 		characters = emptyList(), planets = emptyList(), starships = emptyList(),
 		vehicles = emptyList(), species = emptyList(), url = ""
 	)
+	val mockVehicle = Vehicle(
+		id = 1, name = "Snowspeeder", model = "t-47 airspeeder", manufacturer = "Incom corporation",
+		costInCredits = "unknown", length = "4.5", maxAtmospheringSpeed = "650", crew = "2",
+		passengers = "0", cargoCapacity = "10", consumables = "none", vehicleClass = "airspeeder",
+		pilots = emptyList(), films = emptyList(), url = ""
+	)
+	val mockStarship = Starship(
+		id = 1, name = "X-wing", model = "T-65 X-wing", manufacturer = "Incom Corporation",
+		costInCredits = "149999", length = "12.5", maxAtmospheringSpeed = "1050", crew = "1",
+		passengers = "0", cargoCapacity = "110", consumables = "1 week", hyperdriveRating = "1.0",
+		MGLT = "100", starshipClass = "Starfighter", pilots = emptyList(), films = emptyList(), url = ""
+	)
 	val mockCharacter = Character(
 		id = 1, name = "Luke Skywalker", height = "172", mass = "77", hairColor = "blond",
 		skinColor = "fair", eyeColor = "blue", birthYear = "19BBY", gender = "male",
 		homeworld = mockPlanet, films = listOf(mockFilm), species = emptyList(),
-		vehicles = emptyList(), starships = emptyList(), url = ""
+		vehicles = listOf(mockVehicle), starships = listOf(mockStarship), url = ""
 	)
 	CharacterDetailContent(character = mockCharacter, onFilmClick = {})
 }
