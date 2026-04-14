@@ -33,6 +33,7 @@ import test_tasks.workmate_test_task.domain.model.Starship
 import test_tasks.workmate_test_task.domain.model.Vehicle
 import test_tasks.workmate_test_task.ui.components.ClickableFilmCard
 import test_tasks.workmate_test_task.ui.components.EmptyInfoCard
+import test_tasks.workmate_test_task.ui.components.ErrorScreen
 import test_tasks.workmate_test_task.ui.components.InfoCard
 import test_tasks.workmate_test_task.ui.components.SectionTitle
 
@@ -80,9 +81,10 @@ fun CharacterDetailScreen(
 			}
 
 			is CharacterDetailUiState.Error   -> {
-				Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-					Text(state.message, color = MaterialTheme.colorScheme.error)
-				}
+				ErrorScreen(
+					message = state.message,
+					onRetry = { /* В реальном приложении здесь вызываем метод viewModel.retry() */ }
+				)
 			}
 		}
 	}
