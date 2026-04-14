@@ -73,19 +73,24 @@ fun CharacterDetailContent(character: Character, modifier: Modifier = Modifier) 
         item { InfoCard("Height", "${character.height}cm") }
         item { InfoCard("Mass", "${character.mass}kg") }
         item { InfoCard("Gender", character.gender) }
+        item { InfoCard("Homeworld", character.homeworld?.name ?: "Unknown") }
 
         item { SectionTitle("Species") }
         if (character.species.isEmpty()) {
             item { EmptyInfoCard("No species information available") }
         } else {
             items(character.species) { species ->
-                InfoCard("Classification", species.classification)
+                InfoCard(species.name, species.classification)
             }
         }
 
         item { SectionTitle("Films") }
-        items(character.films) { film ->
-            FilmCard(film.title, film.openingCrawl)
+        if (character.films.isEmpty()) {
+            item { EmptyInfoCard("No films available") }
+        } else {
+            items(character.films) { film ->
+                FilmCard(film.title, film.openingCrawl)
+            }
         }
     }
 }

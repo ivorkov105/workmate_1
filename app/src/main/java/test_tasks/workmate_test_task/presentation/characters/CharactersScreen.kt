@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,12 +22,13 @@ import test_tasks.workmate_test_task.domain.model.Character
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun  CharactersScreen(
+fun CharactersScreen(
     viewModel: CharactersViewModel,
     onNavigateToDetail: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
     Scaffold(
         topBar = {
@@ -64,36 +66,66 @@ fun  CharactersScreen(
                 )
             )
 
-            when (val state = uiState) {
-                is CharactersUiState.Loading -> {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = Color(0xFF5C6BC0))
-                    }
-                }
-                is CharactersUiState.Empty -> {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text("No characters found", fontSize = 18.sp, color = Color.Gray)
-                    }
-                }
-                is CharactersUiState.Success -> {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(bottom = 16.dp)
-                    ) {
-                        items(state.characters) { character ->
-                            CharacterItem(
-                                character = character,
-                                onClick = { onNavigateToDetail(character.id) }
-                            )
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                onRefresh = { viewModel.manualRefresh() },
+                modifier = Modifier.fillMaxSize()
+            ) {
+                when (val state = uiState) {
+                    is CharactersUiState.Loading -> {
+                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator(color = Color(0xFF5C6BC0))
                         }
                     }
-                }
-                is CharactersUiState.Error -> {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(state.message, color = MaterialTheme.colorScheme.error)
+                    is CharactersUiState.Empty -> {
+                        EmptyOrErrorState(
+                            message = "No characters found",
+                            onRetry = { viewModel.manualRefresh() }
+                        )
+                    }
+                    is CharactersUiState.Success -> {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(bottom = 16.dp),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            items(state.characters) { character ->
+                                CharacterItem(
+                                    character = character,
+                                    onClick = { onNavigateToDetail(character.id) }
+                                )
+                            }
+                        }
+                    }
+                    is CharactersUiState.Error -> {
+                        EmptyOrErrorState(
+                            message = state.message,
+                            onRetry = { viewModel.manualRefresh() }
+                        )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun EmptyOrErrorState(
+    message: String,
+    onRetry: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(message, fontSize = 18.sp, color = Color.Gray)
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = onRetry,
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5C6BC0))
+        ) {
+            Text("Retry")
         }
     }
 }

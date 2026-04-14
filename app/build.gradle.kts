@@ -50,9 +50,11 @@ dependencies {
 	implementation(libs.androidx.navigation.compose)
 	implementation(libs.androidx.hilt.navigation.compose)
 
-	// Retrofit
+	// Retrofit & OkHttp
 	implementation(libs.retrofit)
 	implementation(libs.retrofit.converter.gson)
+	implementation(libs.okhttp)
+	implementation(libs.okhttp.logging.interceptor)
 
 	// Room
 	implementation(libs.androidx.room.runtime)

@@ -10,7 +10,9 @@ data class Species(
     val hairColors: String,
     val eyeColors: String,
     val averageLifespan: String,
-    val homeworld: String?,
+    val homeworld: Planet?,
     val language: String,
+    val people: List<Character>,
+    val films: List<Film>,
     val url: String
 )

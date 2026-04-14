@@ -9,6 +9,8 @@ fun String.toId(): Int {
     return this.split("/").filter { it.isNotEmpty() }.last().toInt()
 }
 
+// --- DTO to Entity ---
+
 fun CharacterDto.toEntity(): CharacterEntity = CharacterEntity(
     id = url.toId(),
     name = name,
@@ -109,6 +111,8 @@ fun StarshipDto.toEntity(): StarshipEntity = StarshipEntity(
     url = url
 )
 
+// --- Entity to Domain ---
+
 fun CharacterEntity.toDomain(): Character = Character(
     id = id,
     name = name,
@@ -119,7 +123,7 @@ fun CharacterEntity.toDomain(): Character = Character(
     eyeColor = eyeColor,
     birthYear = birthYear,
     gender = gender,
-    homeworld = null, 
+    homeworld = null,
     films = emptyList(),
     species = emptyList(),
     vehicles = emptyList(),
@@ -143,10 +147,21 @@ fun FilmEntity.toDomain(): Film = Film(
     director = director,
     producer = producer,
     releaseDate = releaseDate,
+    characters = emptyList(),
+    planets = emptyList(),
+    starships = emptyList(),
+    vehicles = emptyList(),
+    species = emptyList(),
     url = url
 )
 
-fun FilmWithDetails.toDomain(): Film = film.toDomain() 
+fun FilmWithDetails.toDomain(): Film = film.toDomain().copy(
+    characters = characters.map { it.toDomain() },
+    planets = planets.map { it.toDomain() },
+    starships = starships.map { it.toDomain() },
+    vehicles = vehicles.map { it.toDomain() },
+    species = species.map { it.toDomain() }
+)
 
 fun PlanetEntity.toDomain(): Planet = Planet(
     id = id,
@@ -159,7 +174,14 @@ fun PlanetEntity.toDomain(): Planet = Planet(
     terrain = terrain,
     surfaceWater = surfaceWater,
     population = population,
+    residents = emptyList(),
+    films = emptyList(),
     url = url
+)
+
+fun PlanetWithDetails.toDomain(): Planet = planet.toDomain().copy(
+    residents = residents.map { it.toDomain() },
+    films = films.map { it.toDomain() }
 )
 
 fun SpeciesEntity.toDomain(): Species = Species(
@@ -174,7 +196,15 @@ fun SpeciesEntity.toDomain(): Species = Species(
     averageLifespan = averageLifespan,
     homeworld = null,
     language = language,
+    people = emptyList(),
+    films = emptyList(),
     url = url
+)
+
+fun SpeciesWithDetails.toDomain(): Species = species.toDomain().copy(
+    homeworld = homeworld?.toDomain(),
+    people = people.map { it.toDomain() },
+    films = films.map { it.toDomain() }
 )
 
 fun VehicleEntity.toDomain(): Vehicle = Vehicle(
@@ -190,7 +220,14 @@ fun VehicleEntity.toDomain(): Vehicle = Vehicle(
     cargoCapacity = cargoCapacity,
     consumables = consumables,
     vehicleClass = vehicleClass,
+    pilots = emptyList(),
+    films = emptyList(),
     url = url
+)
+
+fun VehicleWithDetails.toDomain(): Vehicle = vehicle.toDomain().copy(
+    pilots = pilots.map { it.toDomain() },
+    films = films.map { it.toDomain() }
 )
 
 fun StarshipEntity.toDomain(): Starship = Starship(
@@ -208,8 +245,17 @@ fun StarshipEntity.toDomain(): Starship = Starship(
     hyperdriveRating = hyperdriveRating,
     MGLT = MGLT,
     starshipClass = starshipClass,
+    pilots = emptyList(),
+    films = emptyList(),
     url = url
 )
+
+fun StarshipWithDetails.toDomain(): Starship = starship.toDomain().copy(
+    pilots = pilots.map { it.toDomain() },
+    films = films.map { it.toDomain() }
+)
+
+// --- CrossRef Mappers ---
 
 fun CharacterDto.toFilmCrossRefs(): List<CharacterFilmCrossRef> {
     val characterId = url.toId()

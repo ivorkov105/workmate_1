@@ -12,4 +12,11 @@ interface StarWarsRepository {
     
     fun getCharacter(id: Int): Flow<Character?>
     fun getFilm(id: Int): Flow<Film?>
+
+    suspend fun syncCharacter(id: Int)
+    suspend fun syncFilm(id: Int)
+    suspend fun syncPlanet(id: Int)
+    suspend fun syncSpecies(id: Int)
+    suspend fun syncVehicle(id: Int)
+    suspend fun syncStarship(id: Int)
 }

@@ -15,5 +15,7 @@ data class Starship(
     val hyperdriveRating: String,
     val MGLT: String,
     val starshipClass: String,
+    val pilots: List<Character>,
+    val films: List<Film>,
     val url: String
 )

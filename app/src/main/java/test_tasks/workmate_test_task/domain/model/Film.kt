@@ -8,5 +8,10 @@ data class Film(
     val director: String,
     val producer: String,
     val releaseDate: String,
+    val characters: List<Character>,
+    val planets: List<Planet>,
+    val starships: List<Starship>,
+    val vehicles: List<Vehicle>,
+    val species: List<Species>,
     val url: String
 )

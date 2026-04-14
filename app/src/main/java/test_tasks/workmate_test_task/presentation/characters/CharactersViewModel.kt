@@ -22,8 +22,9 @@ class CharactersViewModel @Inject constructor(
     val searchQuery = _searchQuery.asStateFlow()
 
     private val _isSyncing = MutableStateFlow(false)
+    private val _isManualRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isManualRefreshing.asStateFlow()
 
-    @OptIn(FlowPreview::class)
     val uiState: StateFlow<CharactersUiState> = _searchQuery
         .debounce(300)
         .flatMapLatest { query ->
@@ -43,14 +44,24 @@ class CharactersViewModel @Inject constructor(
         )
 
     init {
-        refresh()
+        silentSync()
     }
 
     fun onSearchQueryChanged(query: String) {
         _searchQuery.value = query
     }
 
-    fun refresh() {
+    fun manualRefresh() {
+        viewModelScope.launch {
+            _isManualRefreshing.value = true
+            _isSyncing.value = true
+            syncCharactersUseCase(1)
+            _isSyncing.value = false
+            _isManualRefreshing.value = false
+        }
+    }
+
+    private fun silentSync() {
         viewModelScope.launch {
             _isSyncing.value = true
             syncCharactersUseCase(1)

@@ -13,5 +13,7 @@ data class Vehicle(
     val cargoCapacity: String,
     val consumables: String,
     val vehicleClass: String,
+    val pilots: List<Character>,
+    val films: List<Film>,
     val url: String
 )

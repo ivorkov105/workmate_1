@@ -28,20 +28,35 @@ interface StarWarsDao {
     @Query("SELECT * FROM films")
     fun getAllFilmsWithDetails(): Flow<List<FilmWithDetails>>
 
+    @Query("SELECT * FROM films WHERE id = :id")
+    suspend fun getFilmById(id: Int): FilmEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlanets(planets: List<PlanetEntity>)
 
     @Query("SELECT * FROM planets")
     fun getAllPlanets(): Flow<List<PlanetEntity>>
 
+    @Query("SELECT * FROM planets WHERE id = :id")
+    suspend fun getPlanetById(id: Int): PlanetEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSpecies(species: List<SpeciesEntity>)
+
+    @Query("SELECT * FROM species WHERE id = :id")
+    suspend fun getSpeciesById(id: Int): SpeciesEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVehicles(vehicles: List<VehicleEntity>)
 
+    @Query("SELECT * FROM vehicles WHERE id = :id")
+    suspend fun getVehicleById(id: Int): VehicleEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStarships(starships: List<StarshipEntity>)
+
+    @Query("SELECT * FROM starships WHERE id = :id")
+    suspend fun getStarshipById(id: Int): StarshipEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacterFilmCrossRefs(crossRefs: List<CharacterFilmCrossRef>)
