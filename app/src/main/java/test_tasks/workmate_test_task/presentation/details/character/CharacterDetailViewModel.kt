@@ -1,4 +1,4 @@
-package test_tasks.workmate_test_task.presentation.detail
+package test_tasks.workmate_test_task.presentation.details.character
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

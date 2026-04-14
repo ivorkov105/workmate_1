@@ -9,13 +9,18 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import test_tasks.workmate_test_task.presentation.characters.CharactersScreen
 import test_tasks.workmate_test_task.presentation.characters.CharactersViewModel
-import test_tasks.workmate_test_task.presentation.detail.CharacterDetailScreen
-import test_tasks.workmate_test_task.presentation.detail.CharacterDetailViewModel
+import test_tasks.workmate_test_task.presentation.details.character.CharacterDetailScreen
+import test_tasks.workmate_test_task.presentation.details.character.CharacterDetailViewModel
+import test_tasks.workmate_test_task.presentation.details.film.FilmDetailScreen
+import test_tasks.workmate_test_task.presentation.details.film.FilmDetailViewModel
 
 sealed class Screen(val route: String) {
     object Characters : Screen("characters")
     object CharacterDetail : Screen("character_detail/{characterId}") {
         fun createRoute(id: Int) = "character_detail/$id"
+    }
+    object FilmDetail : Screen("film_detail/{filmId}") {
+        fun createRoute(id: Int) = "film_detail/$id"
     }
 }
 
@@ -42,6 +47,19 @@ fun StarWarsNav() {
         ) {
             val viewModel: CharacterDetailViewModel = hiltViewModel()
             CharacterDetailScreen(
+                viewModel = viewModel,
+                onBackClick = { navController.popBackStack() },
+                onFilmClick = { filmId ->
+                    navController.navigate(Screen.FilmDetail.createRoute(filmId))
+                }
+            )
+        }
+        composable(
+            route = Screen.FilmDetail.route,
+            arguments = listOf(navArgument("filmId") { type = NavType.IntType })
+        ) {
+            val viewModel: FilmDetailViewModel = hiltViewModel()
+            FilmDetailScreen(
                 viewModel = viewModel,
                 onBackClick = { navController.popBackStack() }
             )
